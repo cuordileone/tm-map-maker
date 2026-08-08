@@ -28,7 +28,7 @@ public sealed record MapInventoryReport(
             .ToList();
 
         return new MapInventoryReport(
-            MapFile: Path.GetFileName(mapFilePath),
+            MapFile: mapFilePath,
             TotalBlocks: blocks.Count,
             GridBlocks: blocks.Count(b => b.Placement == PlacementType.Grid),
             FreeBlocks: blocks.Count(b => b.Placement == PlacementType.Free),

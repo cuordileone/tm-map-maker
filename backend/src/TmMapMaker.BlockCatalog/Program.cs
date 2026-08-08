@@ -20,10 +20,12 @@ foreach (var mapFile in mapFiles)
 {
     try
     {
+        var relativePath = Path.GetRelativePath(inputDir, mapFile);
         var blocks = GbxMapReader.ReadBlocks(mapFile);
-        var report = MapInventoryReport.From(mapFile, blocks);
+        var report = MapInventoryReport.From(relativePath, blocks);
 
-        var outFile = Path.Combine(outputDir, Path.GetFileNameWithoutExtension(mapFile) + ".inventory.json");
+        var outName = relativePath.Replace(Path.DirectorySeparatorChar, '_').Replace(Path.AltDirectorySeparatorChar, '_');
+        var outFile = Path.Combine(outputDir, Path.GetFileNameWithoutExtension(outName) + ".inventory.json");
         File.WriteAllText(outFile, JsonSerializer.Serialize(report, jsonOptions));
 
         var flag = report.UnrecognizedNames.Count > 0
