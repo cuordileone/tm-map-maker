@@ -22,14 +22,28 @@ come ground truth per validare il nuovo Block Catalog (vedi sotto).
 
 ## Scope v1
 
-- Solo ambiente **Stadium**, set base di blocchi: dritti, curve (vari angoli),
-  salite/rampe, checkpoint, start/finish. Ampliamento ad altri ambienti e
-  blocchi avanzati è esplicitamente fuori scope v1.
+- Solo ambiente **Stadium**, ma con copertura di **tutte le famiglie di
+  superficie principali**, non solo quella "veloce": `RoadTech`, `RoadDirt`,
+  `RoadBump`, `RoadIce`, `RoadTechIce`, `RoadGrass`, più gli equivalenti
+  `Platform*` (Tech, Dirt, Ice, Grass, Plastic) e i muri (`TrackWall`,
+  `DecoWall`). Per ciascuna famiglia: dritto, curva base, salita/rampa,
+  checkpoint, start/finish. Il set completo di varianti (chicane, diagonali,
+  loop, ecc.) resta fuori scope v1, ma **nessuno stile di mappa deve essere
+  strutturalmente escluso** — tech, dirt, ice, stunt, fullspeed devono essere
+  tutti costruibili fin dal v1, anche se con un catalogo blocchi ridotto
+  all'interno di ciascuna famiglia.
 - Due modalità di editing disponibili fin dal v1: **disegno del percorso** e
   **posizionamento manuale a blocchi**, sullo stesso modello dati.
 - Account utente + galleria pubblica fin dal v1 (salvataggio progetti,
   pubblicazione, elenco/categoria).
 - Editor 3D reale (three.js), non 2D.
+
+**Perché questo punto è critico**: il vecchio progetto (`tm2020-claude-tracks`)
+aveva verificato solo un vocabolario di blocchi `RoadTech` (velocità/tecnico
+puro) — di fatto escludeva strutturalmente dirt, ice, stunt, grass fin dalla
+progettazione. Questo tool deve permettere a chiunque di costruire qualsiasi
+tipo di mappa, quindi il Block Catalog Builder va puntato su mappe di
+riferimento che coprano più famiglie fin dal primo giro, non solo velocità.
 
 ## Fuori scope v1 (esplicitamente rimandato)
 
@@ -71,9 +85,19 @@ Motivazione stack:
 ## Componenti
 
 ### Block Catalog Builder (tool offline, C# + GBX.NET)
-Analizza le mappe di riferimento in `riferimenti/` e produce un catalogo
-verificato dei blocchi Stadium base: id, dimensioni/footprint, punti di
-connessione, rotazioni valide. Output: JSON versionato, non generato a runtime.
+Analizza le mappe di riferimento e produce un catalogo verificato dei blocchi
+Stadium: id, dimensioni/footprint, punti di connessione, rotazioni valide.
+Output: JSON versionato, non generato a runtime.
+
+Il catalogo deve coprire almeno un dritto/curva/rampa verificati per **ogni**
+famiglia di superficie in scope (Tech, Dirt, Bump, Ice, TechIce, Grass, e i
+`Platform*` corrispondenti) — non solo la famiglia velocità. Le mappe attuali
+in `riferimenti/` (Alpha Valley, Aram, Jeskai, Mile Zero, R_g Avatar,
+[FS] Cliffhanger, [MiniFS] First, weekly5/FLOAT, weekly5/spin) non sono
+garantite coprire tutte le famiglie — vanno ispezionate all'inizio
+dell'implementazione, e se mancano superfici (dirt/ice/grass in particolare)
+vanno aggiunte mappe di riferimento mirate prima di considerare il catalogo
+completo per il v1.
 
 **Regola fail-loud** (lezione appresa dal vecchio progetto): se un blocco non
 è verificato contro una mappa di riferimento reale, il sistema si rifiuta di
@@ -145,8 +169,10 @@ meno comuni.
 ## Rischi noti / incertezze aperte
 
 - L'accuratezza del Block Catalog dipende dalla qualità e copertura delle
-  mappe di riferimento disponibili — potrebbe servire raccogliere altre mappe
-  oltre a quelle già in `riferimenti/`.
+  mappe di riferimento disponibili. Le mappe già presenti in `riferimenti/`
+  non sono verificate per coprire tutte le famiglie di superficie (dirt/ice/
+  grass in particolare rischiano di essere sotto-rappresentate) — primo passo
+  dell'implementazione: verificarlo e raccogliere mappe mirate se mancano.
 - I modelli 3D ricostruiti "somiglianti ma non identici" sono una scelta di
   compromesso: leggibilità per il giocatore vs. rischio IP. Non sostituisce un
   parere legale formale se il progetto crescesse in visibilità/monetizzazione.
