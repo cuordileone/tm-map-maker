@@ -17,4 +17,5 @@ public sealed record PlacedBlock(
     float? PitchRad,
     float? RollRad,
     int Variant,
-    int SubVariant);
+    int SubVariant,
+    bool IsCustom);

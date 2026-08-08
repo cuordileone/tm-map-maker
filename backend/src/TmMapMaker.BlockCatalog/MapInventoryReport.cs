@@ -13,15 +13,15 @@ public sealed record MapInventoryReport(
     public static MapInventoryReport From(string mapFilePath, IReadOnlyList<PlacedBlock> blocks)
     {
         var families = blocks
-            .GroupBy(b => b.Family)
+            .GroupBy(b => b.IsCustom ? "Custom" : b.Family.ToString())
             .ToDictionary(
-                g => g.Key.ToString(),
+                g => g.Key,
                 g => new FamilyBreakdown(
                     g.Count(),
                     g.Select(b => b.Name).Distinct().OrderBy(n => n).ToList()));
 
         var unrecognized = blocks
-            .Where(b => b.Family == BlockFamily.Unknown && !BlockNameClassifier.IsCustomBlock(b.Name))
+            .Where(b => b.Family == BlockFamily.Unknown && !b.IsCustom)
             .Select(b => b.Name)
             .Distinct()
             .OrderBy(n => n)

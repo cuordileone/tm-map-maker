@@ -6,18 +6,33 @@ namespace TmMapMaker.BlockCatalog;
 
 public static class GbxMapReader
 {
-    private static bool _lzoInitialized;
+    private static readonly bool _lzoInitialized = InitializeLzo();
+
+    // Explicit static constructor removes the "beforefieldinit" flag, which guarantees
+    // the CLR runs the type initializer (and therefore the _lzoInitialized field
+    // initializer) before the first call to ReadBlocks, not just before the first
+    // access to a static field. Without this, the field initializer's timing relative
+    // to ReadBlocks would be unspecified.
+    static GbxMapReader()
+    {
+    }
+
+    private static bool InitializeLzo()
+    {
+        Gbx.LZO = new Lzo();
+        return true;
+    }
 
     public static IReadOnlyList<PlacedBlock> ReadBlocks(string mapFilePath)
     {
-        EnsureLzoInitialized();
         var map = Gbx.ParseNode<CGameCtnChallenge>(mapFilePath);
         var blocks = map.Blocks ?? new List<CGameCtnBlock>();
         var result = new List<PlacedBlock>(blocks.Count);
 
         foreach (var b in blocks)
         {
-            var family = BlockNameClassifier.IsCustomBlock(b.Name)
+            var isCustom = BlockNameClassifier.IsCustomBlock(b.Name);
+            var family = isCustom
                 ? BlockFamily.Unknown
                 : BlockNameClassifier.ClassifyFamily(b.Name);
 
@@ -34,7 +49,8 @@ public static class GbxMapReader
                     PitchRad: b.YawPitchRoll?.Y,
                     RollRad: b.YawPitchRoll?.Z,
                     Variant: b.Variant,
-                    SubVariant: b.SubVariant)
+                    SubVariant: b.SubVariant,
+                    IsCustom: isCustom)
                 : new PlacedBlock(
                     Name: b.Name,
                     Family: family,
@@ -44,16 +60,10 @@ public static class GbxMapReader
                     WorldX: null, WorldY: null, WorldZ: null,
                     YawRad: null, PitchRad: null, RollRad: null,
                     Variant: b.Variant,
-                    SubVariant: b.SubVariant));
+                    SubVariant: b.SubVariant,
+                    IsCustom: isCustom));
         }
 
         return result;
-    }
-
-    private static void EnsureLzoInitialized()
-    {
-        if (_lzoInitialized) return;
-        Gbx.LZO = new Lzo();
-        _lzoInitialized = true;
     }
 }
