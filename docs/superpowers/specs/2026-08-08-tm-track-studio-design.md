@@ -34,6 +34,10 @@ come ground truth per validare il nuovo Block Catalog (vedi sotto).
   all'interno di ciascuna famiglia.
 - Due modalità di editing disponibili fin dal v1: **disegno del percorso** e
   **posizionamento manuale a blocchi**, sullo stesso modello dati.
+- **Posa libera (FREE placement) inclusa fin dal v1**, non solo blocchi a
+  griglia. Verificato empiricamente (vedi sotto) che le mappe reali di
+  qualità usano posa libera in modo massiccio — un motore solo-griglia
+  escluderebbe di fatto gli stili tech/stunt/precision curati.
 - Account utente + galleria pubblica fin dal v1 (salvataggio progetti,
   pubblicazione, elenco/categoria).
 - Editor 3D reale (three.js), non 2D.
@@ -120,10 +124,21 @@ Converte il percorso disegnato in blocchi reali usando il Block Catalog,
 validando ogni passo contro connessioni verificate.
 
 ### Validator (client-side, prima di salvare/esportare)
-1. Connettività: ogni blocco ha un vicino compatibile
-2. Nessuna sovrapposizione di footprint
+1. Connettività: ogni blocco ha un vicino compatibile — verificata su
+   **geometria reale** (bounding box/connettori nello spazio), non solo
+   adiacenza a cella griglia, per supportare correttamente i blocchi FREE
+   (vedi nota sotto)
+2. Nessuna sovrapposizione di footprint (griglia + FREE)
 3. Percorso Start → Checkpoint(s) → Finish raggiungibile
 4. Ogni blocco esiste nel Block Catalog verificato
+
+**Nota tecnica critica**: un tracciante basato su adiacenza a cella griglia
+(BFS su coordinate intere) **non funziona** su mappe con blocchi in posa
+libera — verificato analizzando `Alpha Valley 1.Map.Gbx` (partenza FREE,
+tracciante non trova nemmeno il punto di inizio) e `[FS] Cliffhanger.Map.Gbx`
+(206 blocchi guidabili su ~210 sono FREE, il tracciante a griglia ne segue
+solo 4). Il Validator e il Path Compiler devono lavorare su **posizione
+world-space reale + connettori dei blocchi**, non su indici di cella.
 
 ### Export Service (backend)
 Modello dati validato → `.Map.Gbx` reale via GBX.NET.
@@ -183,3 +198,11 @@ meno comuni.
   parere legale formale se il progetto crescesse in visibilità/monetizzazione.
 - Nessun test automatizzato può sostituire l'apertura reale in TM2020: il
   primo batch di piste generate va validato a mano.
+- Il tool `analizzatore/` (skill `analizza-mappe-tm`) ha un tracciante basato
+  su BFS a griglia che è stato verificato **inaffidabile su mappe reali con
+  posa libera** (vedi nota nel Validator). È stato corretto un bug di
+  classificazione (muri trattati come guidabili), ma il limite architetturale
+  di fondo resta: serve un tracciante geometrico, non a griglia. Finché non
+  viene riscritto, va usato solo per ispezionare dati grezzi (blocchi/
+  waypoint/coordinate), non per fidarsi della sua narrazione "tracciato in
+  ordine" su mappe complesse.
