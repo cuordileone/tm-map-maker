@@ -54,7 +54,15 @@ function BlockMesh({
   const y = block.level * LEVEL_HEIGHT;
 
   return (
-    <group position={[block.cellX * CELL_SIZE, y, block.cellZ * CELL_SIZE]} rotation={[0, rotationY, 0]}>
+    <group position={[block.cellX * CELL_SIZE, y, block.cellZ * CELL_SIZE]}>
+      {/* DEBUG label, not rotated with the block, so it stays readable - shows
+          exactly what state.ts sees: shape, rotationSteps, cell. Temporary,
+          for diagnosing the connectivity mismatch reported after two failed
+          blind fixes - remove once confirmed correct. */}
+      <Text position={[0, 1.6, 0]} fontSize={0.16} color="#fde047" anchorX="center" anchorY="middle">
+        {`${block.shape} r${block.rotationSteps} (${block.cellX},${block.cellZ})`}
+      </Text>
+      <group rotation={[0, rotationY, 0]}>
       {block.shape === "straight" && <StraightGeometry color={surfaceColor} borderColor={borderColor} />}
       {block.shape === "curve" && <CurveGeometry color={surfaceColor} borderColor={borderColor} />}
       {block.shape === "slopeUp" && <SlopeGeometry color={surfaceColor} borderColor={borderColor} direction={1} />}
@@ -75,6 +83,7 @@ function BlockMesh({
         <coneGeometry args={[0.12, 0.25, 3]} />
         <meshStandardMaterial color={selected ? "#22d3ee" : "#e5e7eb"} />
       </mesh>
+      </group>
     </group>
   );
 }
