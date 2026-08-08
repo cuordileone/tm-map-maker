@@ -62,7 +62,7 @@ riferimento che coprano più famiglie fin dal primo giro, non solo velocità.
 ## Architettura
 
 ```
-Frontend (React + Vite + three.js/react-three-fiber) — hosted su Netlify
+Frontend (Next.js + three.js/react-three-fiber) — hosted su Netlify
    editor 3D: modalità Disegno + modalità Blocchi manuali,
    stesso modello dati sotto (lista blocchi: id, x,y,z, rotazione)
         │
@@ -82,9 +82,16 @@ Motivazione stack:
   formato Gbx (400+ classi supportate, TM2020 aggiornato), molto più
   affidabile di `gbx-py` usata nel vecchio progetto Python.
 - Backend in C# permette di usare GBX.NET direttamente, senza porting.
-- Frontend su Netlify riusa infrastruttura che l'utente già conosce e usa
-  (stesso account team usato per altri progetti). Netlify non supporta hosting
-  nativo di backend .NET, da cui la separazione frontend/backend.
+- **Next.js** invece di semplice React+Vite: la galleria pubblica (pagine
+  progetto/pista) beneficia di SSR per essere indicizzata da Google — una SPA
+  pura non lo farebbe bene. Per l'editor 3D in sé non cambia nulla rispetto a
+  Vite. Scelto al posto di Vercel perché tecnicamente equivalente per questo
+  progetto (nessuno dei due fa girare il backend .NET) e perché Netlify è
+  infrastruttura che l'utente già conosce e usa (stesso account team usato per
+  altri progetti) — nessun vantaggio a introdurre un secondo provider.
+- Frontend su Netlify, backend su Railway: separati perché nessuna piattaforma
+  di hosting frontend (Netlify, Vercel, ecc.) fa girare nativamente un backend
+  .NET persistente.
 
 ## Componenti
 
