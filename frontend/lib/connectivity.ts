@@ -56,8 +56,13 @@ function worldExit(block: PlacedBlock): { cellX: number; cellZ: number; level: n
 function worldEntry(block: PlacedBlock): { cellX: number; cellZ: number; level: number } | null {
   const socket = ENTRY_SOCKET[block.shape];
   if (!socket) return null;
+  // ENTRY_SOCKET's local direction already points "backward" (toward where the
+  // previous block should sit), the same way EXIT_SOCKET points "forward" - so
+  // this must add the rotated offset, exactly like worldExit does. Subtracting
+  // here was the bug: it silently doubled the offset's sign, so even two plain
+  // Straight blocks placed in a row (rotation 0) never registered as connected.
   const { dx, dz } = rotateOffset(socket.dx, socket.dz, block.rotationSteps);
-  return { cellX: block.cellX - dx, cellZ: block.cellZ - dz, level: block.level - socket.dLevel };
+  return { cellX: block.cellX + dx, cellZ: block.cellZ + dz, level: block.level + socket.dLevel };
 }
 
 export type ConnectivityResult = {

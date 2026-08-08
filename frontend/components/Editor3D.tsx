@@ -1,8 +1,9 @@
 "use client";
 
-import { useMemo, useState } from "react";
+import { useMemo, useRef, useState } from "react";
 import { Canvas, type ThreeEvent } from "@react-three/fiber";
 import { OrbitControls, Grid, Text } from "@react-three/drei";
+import { MOUSE } from "three";
 import { checkConnectivity, type ShapeType, type PlacedBlock } from "@/lib/connectivity";
 
 const CELL_SIZE = 2;
@@ -43,7 +44,10 @@ function BlockMesh({
   selected: boolean;
   testHighlight: TestHighlight;
 }) {
-  const rotationY = -(block.rotationSteps * Math.PI) / 2;
+  // Must match connectivity.ts's rotateOffset convention exactly (positive steps
+  // rotate local +Z "forward" toward world +X) - a mismatched sign here means a
+  // block can look visually connected while the connectivity checker disagrees.
+  const rotationY = (block.rotationSteps * Math.PI) / 2;
   const surfaceColor = SHAPE_COLORS[block.shape];
   const borderColor =
     testHighlight === "connected" ? "#22c55e" : testHighlight === "break" ? "#ef4444" : selected ? "#22d3ee" : "#f59e0b";
@@ -191,7 +195,26 @@ function GateGeometry({ color, label }: { color: string; label: string }) {
 }
 
 function GroundPlane({ onCellClick }: { onCellClick: (cellX: number, cellZ: number) => void }) {
-  const handleClick = (event: ThreeEvent<MouseEvent>) => {
+  // Distinguish a genuine click from "the user was dragging the camera and the
+  // mouse happened to lift over the ground": track where the left button went
+  // down and only treat it as a placement click if the pointer barely moved.
+  // OrbitControls is also reassigned to right-drag (below) so left-drag never
+  // reaches it in the first place, but this guards the same thing at the
+  // ground-plane level too, in case a click still fires after a tiny jitter.
+  const downPoint = useRef<{ x: number; y: number } | null>(null);
+
+  const handlePointerDown = (event: ThreeEvent<PointerEvent>) => {
+    if (event.button !== 0) return; // only the left button places blocks
+    downPoint.current = { x: event.clientX, y: event.clientY };
+  };
+
+  const handlePointerUp = (event: ThreeEvent<PointerEvent>) => {
+    if (event.button !== 0 || !downPoint.current) return;
+    const dx = event.clientX - downPoint.current.x;
+    const dy = event.clientY - downPoint.current.y;
+    downPoint.current = null;
+    if (Math.hypot(dx, dy) > 6) return; // moved too much - this was a drag, not a click
+
     event.stopPropagation();
     const { x, z } = event.point;
     const cellX = Math.round(x / CELL_SIZE);
@@ -200,7 +223,7 @@ function GroundPlane({ onCellClick }: { onCellClick: (cellX: number, cellZ: numb
   };
 
   return (
-    <mesh rotation={[-Math.PI / 2, 0, 0]} onClick={handleClick}>
+    <mesh rotation={[-Math.PI / 2, 0, 0]} onPointerDown={handlePointerDown} onPointerUp={handlePointerUp}>
       <planeGeometry args={[200, 200]} />
       <meshBasicMaterial visible={false} />
     </mesh>
@@ -295,7 +318,10 @@ export default function Editor3D() {
         {blocks.map((b) => (
           <BlockMesh key={b.id} block={b} selected={b.id === selectedId} testHighlight={highlightFor(b.id)} />
         ))}
-        <OrbitControls makeDefault />
+        {/* Left button is reserved entirely for placing/rotating blocks - the
+            camera never sees it, so orbiting can never accidentally place a
+            block. Right-drag rotates the view, the wheel (or middle-drag) zooms. */}
+        <OrbitControls makeDefault mouseButtons={{ LEFT: undefined, MIDDLE: MOUSE.DOLLY, RIGHT: MOUSE.ROTATE }} />
       </Canvas>
 
       <div className="pointer-events-none absolute left-4 top-4 flex flex-col gap-1 rounded-lg bg-black/60 px-4 py-3 text-sm text-white">
@@ -304,9 +330,10 @@ export default function Editor3D() {
           {testMode
             ? "Modalità prova: verde = collegato, rosso = qui si interrompe."
             : tool === "place"
-              ? "Scegli una forma sotto, clicca sulla griglia per piazzarla. Clicca un blocco per ruotarlo."
+              ? "Scegli una forma sotto, clicca (tasto sinistro) sulla griglia per piazzarla. Clicca un blocco per ruotarlo."
               : "Modalità cancella: clicca un blocco per rimuoverlo."}
         </p>
+        <p className="text-slate-400">Tasto destro trascinato = ruota la visuale. Rotellina = zoom.</p>
       </div>
 
       {testMode && (
