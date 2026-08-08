@@ -38,7 +38,10 @@ pasted in full in `task-3-report.md`.
 
 ## Straight
 
-**Verdict: CONFIRMED — `(dx=0, dy=0, dz=1)`. Moderate confidence (direction unambiguous, absolute match rate not in the 90%+ band).**
+**Verdict: UNCONFIRMED / deferred. The X-axis is ruled out; the sign of the Z-axis forward direction is not.**
+
+*(Revised after review — see "Revision note" at the end of this document for why the original
+"CONFIRMED" verdict here was withdrawn.)*
 
 Starting-guess aggregate: **167/516 (32%) confirmed** — looks bad on its face.
 
@@ -68,16 +71,27 @@ higher at `dz=1` than at any alternative axis I tried:
 | dx=+1 | 3/16 (19%) | 0/10 (0%) | 3/67 (4%) | 0/108 (0%) | 1/43 (2%) |
 | dx=-1 | 0/16 (0%) | 0/10 (0%) | 3/67 (4%) | 0/108 (0%) | 0/43 (0%) |
 
-`dz=-1` looks competitive for the Wall variants (79%/66% vs 78%/65%), but `dz=+1` wins for
-the two "true road" names (RoadTechStraight, RoadBumpStraight) which is the more reliable
-signal since Wall variants are decorative fill more often. The X-axis is decisively ruled out
-for every name (0–19%). I'm confirming `dz=+1` on the strength of this contrast, not because
-any single name clears 90% — none do. `PlatformGrassWallStraight` (10%, N=10) is a genuine
-outlier I can't explain and don't fold into the confirmation; it's a low-N (10) group so I'm
-treating it as noise rather than counter-evidence. The remaining mismatches (20–45% per name)
-are plausible as walls terminating at scenery/texture boundaries in a decoration-heavy map
-(Alpha Valley 1 alone is 15,803 blocks) rather than the direction being wrong, given how stark
-the axis contrast is — but this is a judgment call, not certainty, hence "moderate confidence."
+The X-axis is decisively ruled out for every name (0–19% at `dx=±1` vs. 50–80% at `dz=±1`) —
+that part of the original reasoning holds. But the sign of the Z-axis is not resolved by this
+data. Weighting by occurrence count: `RoadTechStraight` + `RoadBumpStraight` (the two genuine
+road pieces, N=16+10=26, about 11% of the 254-block sample excluding the contaminating slope
+name) favor `dz=+1` (75%/80% vs 50%/70%). But the three Wall families
+(`PlatformIceWallStraight`, `PlatformTechWallStraight`, `PlatformPlasticWallStraight`,
+N=67+108+43=218, about 86% of the sample) either tie almost exactly between the two signs
+(79% vs 78%, 66% vs 65%) or lean marginally toward `dz=-1`, and `PlatformGrassWallStraight`
+(N=10) favors `dz=-1` outright (30% vs 10%). Combined, roughly 89% of the sample either ties
+or leans the opposite way from the 11% that clearly favors `dz=+1`.
+
+The original version of this finding treated the Wall majority as "decorative fill" and
+discounted it in favor of the small Road minority, on the unevidenced assertion that Wall
+variants are decorative more often. That is the same symmetric-tie pattern I correctly read
+as "not real directional evidence, likely non-track reuse" for `Slope2Straight` and `Start`
+below — applying a different standard here just because the tie happens to sit close to a
+plausible-looking value would be inconsistent. I'm withdrawing the confirmation: the data
+rules out the X-axis cleanly, but does not establish which Z sign is the true forward
+direction. This needs either more reference maps with a larger genuine-road sample, or an
+independent way to confirm the Wall families' true connector semantics before they can be
+used as corroborating (rather than contradicting) evidence.
 
 ## Curve1
 
@@ -109,7 +123,7 @@ footprint model than single-cell adjacency.
 
 ## Checkpoint
 
-**Verdict: Provisionally confirmed `(dx=0, dy=0, dz=1)`, but flagged as WEAK EVIDENCE — sample size is far below the reliability threshold.**
+**Verdict: UNCONFIRMED / deferred — closest of the deferred shapes to confirmable, but sample size is far below the reliability threshold.**
 
 Starting-guess aggregate: 4/6 (67%). Per-name breakdown at `dz=1`:
 
@@ -231,17 +245,39 @@ there's no usable signal. Deferred.
 
 | Shape | Status | Offset (dx,dy,dz) | Evidence quality |
 |---|---|---|---|
-| Straight | **CONFIRMED** | (0, 0, 1) | Moderate — direction contrast is decisive across 5 independent block names, but no single name clears 90% |
+| Straight | Deferred | — | X-axis ruled out (0-19% vs 50-80%), but the Z-axis sign is contested: the 11% of the sample that is genuine road pieces favors dz=+1, while the 89% that is Wall-variant pieces ties or leans dz=-1 |
 | Curve1 | Deferred | — | No axis stands out; largest sample (N=46) never exceeds 7% on any offset tried |
-| Checkpoint | **CONFIRMED (weak)** | (0, 0, 1) | 100% but N=4, below reliability threshold |
+| Checkpoint | Deferred | — | 100% at dz=+1 but N=4, below reliability threshold — closest shape to confirmable, just needs more data |
 | Start | Deferred | — | Dominant evidence (N=68) shows decorative-reuse signature, not connector geometry; genuine samples N=2-3 |
 | Finish | Deferred | — | Largest sample (N=23) is a gate's own lateral width, not forward connector; genuine samples N=3-4 disagree |
 | Slope2Straight | Deferred | — | Best forward/climb axis only 34%; dominant 79% result is a symmetric non-directional signature (decorative reuse) |
 | Slope2Up | Deferred | — | N=1 total, not even a plain instance |
 | Slope2Down | Deferred | — | N=2 total, no plain instance, results contradict each other |
 
-**2 of 8 shapes confirmed** (one with a clearly flagged low-N caveat), **6 deferred** pending
-more reference maps and/or further geometry investigation (particularly the wall-curve and
-decorative-slope-reuse questions raised above). This is intentionally conservative per the
-task's instructions — I did not round up borderline percentages, and I did not force a value
-onto shapes with contradictory or too-small evidence.
+**0 of 8 shapes confirmed** in the current 9-map reference corpus. This is an honest finding,
+not a failure of this task: the reference maps available right now are mostly large,
+decoration-dense community maps (Alpha Valley 1 alone is 15,803 blocks, much of it scenery
+rather than track), and they don't contain enough clean, unambiguous examples of these plain
+shapes to pin down exact connector geometry — several of the shapes that looked promising at
+first (Straight, Start, Slope2Straight) turned out, on closer per-block-name inspection, to be
+dominated by decorative reuse of the same meshes rather than genuine chained track sections.
+The practical next step before further Shape Catalog work makes sense is gathering additional
+reference maps that contain simple, unambiguous plain-track sections — short technical or
+speed-test maps rather than large decorated ones — which should raise the genuine-sample-size
+problem seen across almost every shape here. This lines up with the design spec's already-
+flagged risk about reference-map coverage.
+
+## Revision note
+
+The original version of this document (as first committed) marked **Straight** as CONFIRMED
+and **Checkpoint** as "CONFIRMED (weak)". A review caught an inconsistency: the Straight
+verdict discounted a symmetric dz=+1/dz=-1 tie across 89% of its sample as "decorative fill"
+on an asserted-but-unevidenced basis, while the identical symmetric-tie pattern was (correctly)
+used elsewhere in this same document to defer Slope2Straight and Start. Applying the same
+standard in both places, Straight's Z-axis sign is not resolved by the current data — see the
+"Straight" section above, where the verdict and closing paragraph were rewritten to reflect
+this (the underlying per-name tables and the X-axis-ruled-out reasoning are unchanged, since
+that part was already correct). Checkpoint's own prose already said its N=4 sample was below
+the reliability threshold and shouldn't be treated as solid by Task 4; only the verdict
+label/summary-table row were brought in line with that. The other six deferred verdicts were
+independently re-derived by the reviewer and confirmed correct, and are unchanged.
