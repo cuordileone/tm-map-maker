@@ -1,3 +1,3 @@
 namespace TmMapMaker.BlockCatalog;
 
-public sealed record ShapeHypothesis(string ShapeSuffix, int LocalForwardDx, int LocalForwardDz, int LocalForwardDy);
+public sealed record ShapeHypothesis(string ShapeSuffix, int LocalForwardDx, int LocalForwardDy, int LocalForwardDz);

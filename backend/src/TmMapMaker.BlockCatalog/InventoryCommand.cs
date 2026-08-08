@@ -8,7 +8,7 @@ public static class InventoryCommand
     {
         if (args.Length == 0)
         {
-            Console.WriteLine("uso: dotnet run -- <cartella mappe .Map.Gbx> [cartella output JSON]");
+            Console.WriteLine("uso: dotnet run -- inventory <cartella mappe .Map.Gbx> [cartella output JSON]");
             return 1;
         }
 

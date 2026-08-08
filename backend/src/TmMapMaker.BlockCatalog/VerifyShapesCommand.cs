@@ -30,6 +30,7 @@ public static class VerifyShapesCommand
         Console.WriteLine($"trovate {mapFiles.Count} mappe in {inputDir}");
 
         var blocksByMapFile = new Dictionary<string, IReadOnlyList<PlacedBlock>>();
+        var readFailureCount = 0;
         foreach (var mapFile in mapFiles)
         {
             try
@@ -38,6 +39,7 @@ public static class VerifyShapesCommand
             }
             catch (Exception ex)
             {
+                readFailureCount++;
                 Console.WriteLine($"  ERRORE lettura {Path.GetFileName(mapFile)}: {ex.Message}");
             }
         }
@@ -58,6 +60,9 @@ public static class VerifyShapesCommand
                 Console.WriteLine($"      mismatch: {example}");
         }
 
-        return 0;
+        if (readFailureCount > 0)
+            Console.WriteLine($"  {readFailureCount} mappe non lette a causa di errori");
+
+        return (mapFiles.Count == 0 || readFailureCount > 0) ? 1 : 0;
     }
 }
