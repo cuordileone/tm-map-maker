@@ -64,23 +64,27 @@ also ends in "Straight". Excluding that (it's evaluated on its own merits under
 "Slope2Straight" below), the true straight/wall-straight family names all score decisively
 higher at `dz=1` than at any alternative axis I tried:
 
-| axis | RoadTechStraight | RoadBumpStraight | PlatformIceWallStraight | PlatformTechWallStraight | PlatformPlasticWallStraight |
-|---|---|---|---|---|---|
-| dz=+1 | 12/16 (75%) | 8/10 (80%) | 52/67 (78%) | 70/108 (65%) | 24/43 (56%) |
-| dz=-1 | 8/16 (50%) | 7/10 (70%) | 53/67 (79%) | 71/108 (66%) | 24/43 (56%) |
-| dx=+1 | 3/16 (19%) | 0/10 (0%) | 3/67 (4%) | 0/108 (0%) | 1/43 (2%) |
-| dx=-1 | 0/16 (0%) | 0/10 (0%) | 3/67 (4%) | 0/108 (0%) | 0/43 (0%) |
+| axis | RoadTechStraight | RoadBumpStraight | PlatformIceWallStraight | PlatformTechWallStraight | PlatformPlasticWallStraight | PlatformGrassWallStraight |
+|---|---|---|---|---|---|---|
+| dz=+1 | 12/16 (75%) | 8/10 (80%) | 52/67 (78%) | 70/108 (65%) | 24/43 (56%) | 1/10 (10%) |
+| dz=-1 | 8/16 (50%) | 7/10 (70%) | 53/67 (79%) | 71/108 (66%) | 24/43 (56%) | 3/10 (30%) |
+| dx=+1 | 3/16 (19%) | 0/10 (0%) | 3/67 (4%) | 0/108 (0%) | 1/43 (2%) | not separately recorded* |
+| dx=-1 | 0/16 (0%) | 0/10 (0%) | 3/67 (4%) | 0/108 (0%) | 0/43 (0%) | not separately recorded* |
 
-The X-axis is decisively ruled out for every name (0–19% at `dx=±1` vs. 50–80% at `dz=±1`) —
-that part of the original reasoning holds. But the sign of the Z-axis is not resolved by this
-data. Weighting by occurrence count: `RoadTechStraight` + `RoadBumpStraight` (the two genuine
-road pieces, N=16+10=26, about 11% of the 254-block sample excluding the contaminating slope
-name) favor `dz=+1` (75%/80% vs 50%/70%). But the three Wall families
+\* Only the `dz=+1`/`dz=-1` sweep was run for this smaller subgroup; the X-axis result for
+`PlatformGrassWallStraight` specifically was not broken out and is not claimed elsewhere in
+this document.
+
+The X-axis is decisively ruled out for the five names it was measured on (0–19% at `dx=±1`
+vs. 50–80% at `dz=±1`) — that part of the original reasoning holds. But the sign of the Z-axis
+is not resolved by this data. Weighting by occurrence count: `RoadTechStraight` + `RoadBumpStraight`
+(the two genuine road pieces, N=16+10=26, about 11% of the 254-block sample excluding the
+contaminating slope name) favor `dz=+1` (75%/80% vs 50%/70%). But the three Wall families
 (`PlatformIceWallStraight`, `PlatformTechWallStraight`, `PlatformPlasticWallStraight`,
 N=67+108+43=218, about 86% of the sample) either tie almost exactly between the two signs
 (79% vs 78%, 66% vs 65%) or lean marginally toward `dz=-1`, and `PlatformGrassWallStraight`
-(N=10) favors `dz=-1` outright (30% vs 10%). Combined, roughly 89% of the sample either ties
-or leans the opposite way from the 11% that clearly favors `dz=+1`.
+(N=10) favors `dz=-1` outright (30% vs 10%, see table above). Combined, roughly 89% of the
+sample either ties or leans the opposite way from the 11% that clearly favors `dz=+1`.
 
 The original version of this finding treated the Wall majority as "decorative fill" and
 discounted it in favor of the small Road minority, on the unevidenced assertion that Wall
@@ -136,9 +140,10 @@ Starting-guess aggregate: 4/6 (67%). Per-name breakdown at `dz=1`:
 the brief calls out as weak evidence even at 100%. `GateCheckpoint` (N=2, also tiny) misses
 both times; Gate-family checkpoints are likely free-standing arch/gantry markers rather than
 road-continuation pieces, so I don't read its 0% as contradicting the road/platform result —
-but with N=2 I can't be sure either way. I'm recording `(0,0,1)` as the working value because
-it's the only evidence available and it's unanimous within its own name-group, but this
-needs more reference maps before Task 4 should treat it as solid.
+but with N=2 I can't be sure either way. `dz=+1` is the only direction the limited data points
+to, but N=4 is below the reliability threshold, so no offset is recorded here — this shape is
+deferred, not confirmed with a fallback value. This needs more reference maps before Task 4
+can treat it as solid.
 
 ## Start
 
