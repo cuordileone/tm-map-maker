@@ -1,0 +1,36 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio Version 17
+VisualStudioVersion = 17.0.31903.59
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "src", "src", "{1B04333F-9D8A-4BA4-B060-F747A63CE060}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TmMapMaker.BlockCatalog", "src\TmMapMaker.BlockCatalog\TmMapMaker.BlockCatalog.csproj", "{2AFA677C-1685-456C-98BD-1C2DD2747895}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "tests", "tests", "{619954AA-A708-4802-80BB-097B9C03FA5F}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TmMapMaker.BlockCatalog.Tests", "tests\TmMapMaker.BlockCatalog.Tests\TmMapMaker.BlockCatalog.Tests.csproj", "{60F15B31-033D-4385-9ED6-FD5212EEF97B}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{2AFA677C-1685-456C-98BD-1C2DD2747895}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{2AFA677C-1685-456C-98BD-1C2DD2747895}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{2AFA677C-1685-456C-98BD-1C2DD2747895}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{2AFA677C-1685-456C-98BD-1C2DD2747895}.Release|Any CPU.Build.0 = Release|Any CPU
+		{60F15B31-033D-4385-9ED6-FD5212EEF97B}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{60F15B31-033D-4385-9ED6-FD5212EEF97B}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{60F15B31-033D-4385-9ED6-FD5212EEF97B}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{60F15B31-033D-4385-9ED6-FD5212EEF97B}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(NestedProjects) = preSolution
+		{2AFA677C-1685-456C-98BD-1C2DD2747895} = {1B04333F-9D8A-4BA4-B060-F747A63CE060}
+		{60F15B31-033D-4385-9ED6-FD5212EEF97B} = {619954AA-A708-4802-80BB-097B9C03FA5F}
+	EndGlobalSection
+EndGlobal
