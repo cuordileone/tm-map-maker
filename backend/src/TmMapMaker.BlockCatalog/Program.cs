@@ -9,12 +9,29 @@ if (args.Length == 0)
 
 var inputDir = args[0];
 var outputDir = args.Length > 1 ? args[1] : "inventory-output";
-Directory.CreateDirectory(outputDir);
+
+if (!Directory.Exists(inputDir))
+{
+    Console.WriteLine($"ERRORE: la cartella di input non esiste: {inputDir}");
+    return 1;
+}
+
+try
+{
+    Directory.CreateDirectory(outputDir);
+}
+catch (Exception ex)
+{
+    Console.WriteLine($"ERRORE: impossibile creare la cartella di output {outputDir}: {ex.Message}");
+    return 1;
+}
 
 var jsonOptions = new JsonSerializerOptions { WriteIndented = true };
 var mapFiles = Directory.EnumerateFiles(inputDir, "*.Map.Gbx", SearchOption.AllDirectories).ToList();
 
 Console.WriteLine($"trovate {mapFiles.Count} mappe in {inputDir}");
+
+var failureCount = 0;
 
 foreach (var mapFile in mapFiles)
 {
@@ -35,8 +52,9 @@ foreach (var mapFile in mapFiles)
     }
     catch (Exception ex)
     {
+        failureCount++;
         Console.WriteLine($"  ERRORE {Path.GetFileName(mapFile)}: {ex.Message}");
     }
 }
 
-return 0;
+return failureCount > 0 ? 1 : 0;
