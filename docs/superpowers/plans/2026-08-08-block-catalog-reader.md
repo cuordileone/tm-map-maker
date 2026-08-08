@@ -623,6 +623,7 @@ git commit -m "feat: map inventory report (JSON) and CLI entry point"
 ## What this plan deliberately does NOT do
 
 - Does not infer block footprint/connector geometry (which blocks physically connect to which, in what relative offset) — that's the next plan, built on top of this reader's verified output.
+- Does not persist per-block position/rotation in the JSON inventory report — `MapInventoryReport` is a summary/audit artifact (counts + distinct names per family) for reviewing family/style coverage across reference maps, not a full data dump. The full per-block data (grid coords, world position, yaw/pitch/roll) already exists in `PlacedBlock` and `GbxMapReader.ReadBlocks(...)` — the next plan (footprint/connector extraction) should call that C# API in-process, not re-parse the JSON files. Flagged by final review as a plan-clarity gap (the Goal section says the JSON is "the ground-truth data layer" — that's true of the reader's in-memory output, not the JSON specifically); resolved this way by the controller while the project owner was away, worth a quick confirmation on return.
 - Does not write `.Map.Gbx` files (Export Service) — separate future plan.
 - Does not touch the frontend, backend web API, accounts, or gallery — separate future plans per the design spec's subsystem breakdown.
 - Does not fix the `analizzatore` tool's remaining path-tracing limitations (already noted as a known architectural gap in the design spec) — this plan builds a clean reader from scratch instead of reusing that tool's flawed BFS tracer.
