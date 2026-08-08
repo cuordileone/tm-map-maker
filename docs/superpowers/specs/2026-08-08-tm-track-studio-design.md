@@ -173,6 +173,11 @@ meno comuni.
   non sono verificate per coprire tutte le famiglie di superficie (dirt/ice/
   grass in particolare rischiano di essere sotto-rappresentate) — primo passo
   dell'implementazione: verificarlo e raccogliere mappe mirate se mancano.
+  **Strategia di reperimento decisa**: mappe mandate direttamente dall'utente
+  + mappe scaricate da trackmania.exchange (mapsearch), filtrate per premi/
+  numero giocatori alti (per evitare mappe troll/di bassa qualità), una
+  ricerca per ciascuno stile/famiglia di superficie mancante. L'analisi delle
+  mappe scaricate/ricevute usa la skill `analizza-mappe-tm` già disponibile.
 - I modelli 3D ricostruiti "somiglianti ma non identici" sono una scelta di
   compromesso: leggibilità per il giocatore vs. rischio IP. Non sostituisce un
   parere legale formale se il progetto crescesse in visibilità/monetizzazione.
