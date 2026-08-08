@@ -98,29 +98,48 @@ function StraightGeometry({ color, borderColor }: { color: string; borderColor: 
   );
 }
 
-// A real quarter-circle turn: enters at the south edge midpoint, exits at the east
-// edge midpoint, arcing around the south-east corner - a proper curved arc, not an
-// L-shaped box like the first prototype, matching how a real Curve1 block reads.
+// A quarter-circle turn: enters at the local south edge midpoint (0, -CELL_SIZE/2)
+// and exits at the local east edge midpoint (CELL_SIZE/2, 0) - the exact same
+// points ENTRY_SOCKET/EXIT_SOCKET use in lib/connectivity.ts. Built as a chain of
+// small, UNROTATED tiles placed along the arc (no per-tile rotation math at all)
+// on purpose: a compound Euler rotation on a single ring mesh was tried first and
+// silently pointed the visual curve somewhere the connectivity logic didn't agree
+// with, which is exactly the kind of bug that's easy to get wrong by hand and hard
+// to catch without a human actually looking at the result - this approach can't
+// have that class of bug because there's no rotation to get wrong.
 function CurveGeometry({ color, borderColor }: { color: string; borderColor: string }) {
-  const outerRadius = CELL_SIZE / 2 + ROAD_WIDTH / 2;
-  const innerRadius = CELL_SIZE / 2 - ROAD_WIDTH / 2;
-  const cornerX = CELL_SIZE / 2;
-  const cornerZ = -CELL_SIZE / 2;
+  const centerX = CELL_SIZE / 2;
+  const centerZ = -CELL_SIZE / 2;
+  const radius = CELL_SIZE / 2;
+  const segments = 10;
+  const tileSize = ROAD_WIDTH * 0.55;
+
+  const angles = Array.from({ length: segments + 1 }, (_, i) => Math.PI / 2 + (Math.PI / 2) * (i / segments));
 
   return (
-    <group position={[cornerX, 0, cornerZ]}>
-      <mesh rotation={[-Math.PI / 2, 0, Math.PI]} position={[0, 0.05, 0]}>
-        <ringGeometry args={[innerRadius, outerRadius, 32, 1, 0, Math.PI / 2]} />
-        <meshStandardMaterial color={color} side={2} />
-      </mesh>
-      <mesh rotation={[-Math.PI / 2, 0, Math.PI]} position={[0, 0.15, 0]}>
-        <ringGeometry args={[outerRadius, outerRadius + 0.06, 32, 1, 0, Math.PI / 2]} />
-        <meshStandardMaterial color={borderColor} side={2} />
-      </mesh>
-      <mesh rotation={[-Math.PI / 2, 0, Math.PI]} position={[0, 0.15, 0]}>
-        <ringGeometry args={[innerRadius - 0.06, innerRadius, 32, 1, 0, Math.PI / 2]} />
-        <meshStandardMaterial color={borderColor} side={2} />
-      </mesh>
+    <group>
+      {angles.map((phi, i) => (
+        <mesh key={`road-${i}`} position={[centerX + radius * Math.cos(phi), 0.05, centerZ + radius * Math.sin(phi)]}>
+          <boxGeometry args={[tileSize, 0.1, tileSize]} />
+          <meshStandardMaterial color={color} />
+        </mesh>
+      ))}
+      {angles.map((phi, i) => {
+        const outerR = radius + ROAD_WIDTH / 2;
+        const innerR = radius - ROAD_WIDTH / 2;
+        return (
+          <group key={`curb-${i}`}>
+            <mesh position={[centerX + outerR * Math.cos(phi), 0.15, centerZ + outerR * Math.sin(phi)]}>
+              <boxGeometry args={[0.16, 0.3, 0.16]} />
+              <meshStandardMaterial color={borderColor} />
+            </mesh>
+            <mesh position={[centerX + innerR * Math.cos(phi), 0.15, centerZ + innerR * Math.sin(phi)]}>
+              <boxGeometry args={[0.16, 0.3, 0.16]} />
+              <meshStandardMaterial color={borderColor} />
+            </mesh>
+          </group>
+        );
+      })}
     </group>
   );
 }
