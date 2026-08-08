@@ -1,0 +1,10 @@
+# Worktrees (superpowers:using-git-worktrees)
+.worktrees/
+worktrees/
+
+# .NET build artifacts
+backend/**/bin/
+backend/**/obj/
+
+# Generated tool output
+backend/inventory-output/
