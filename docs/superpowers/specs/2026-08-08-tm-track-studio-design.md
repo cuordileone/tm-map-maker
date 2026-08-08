@@ -32,8 +32,25 @@ come ground truth per validare il nuovo Block Catalog (vedi sotto).
   strutturalmente escluso** — tech, dirt, ice, stunt, fullspeed devono essere
   tutti costruibili fin dal v1, anche se con un catalogo blocchi ridotto
   all'interno di ciascuna famiglia.
-- Due modalità di editing disponibili fin dal v1: **disegno del percorso** e
-  **posizionamento manuale a blocchi**, sullo stesso modello dati.
+- Due modalità di editing, sullo stesso modello dati, ma **con priorità diverse**
+  (chiarito dall'utente dopo la stesura iniziale di questo spec):
+  - **Posizionamento manuale a blocchi = modalità BASE, prioritaria.** Deve
+    essere utilizzabile da chi non ha mai usato un computer — "a prova di
+    idiota". Include un **tutorial iniziale guidato**. L'editor genera solo
+    blocchi funzionali della pista (dritti, curve, salite, checkpoint,
+    start/finish) — mai decorazioni. Le decorazioni sono un'azione manuale
+    separata dell'utente, un passo successivo alla costruzione del percorso
+    (non generate automaticamente).
+  - **Disegno del percorso (stile "Paint": disegni una linea, il sistema
+    genera i blocchi) = funzione BETA, priorità bassa.** Va costruita DOPO
+    che la modalità base funziona bene, non in parallelo. Resta nel modello
+    dati/architettura (stesso Shape Catalog, stesso Path Compiler) ma non è
+    la prima cosa da implementare.
+  - Il Block Catalog Reader e lo Shape Catalog (già costruiti) servono
+    **entrambe** le modalità: anche il posizionamento manuale beneficia della
+    geometria dei connettori per aggancio/validazione automatica dei blocchi
+    (evitare che un utente novizio costruisca una pista scollegata), non solo
+    la modalità disegno.
 - **Posa libera (FREE placement) inclusa fin dal v1**, non solo blocchi a
   griglia. Verificato empiricamente (vedi sotto) che le mappe reali di
   qualità usano posa libera in modo massiccio — un motore solo-griglia
