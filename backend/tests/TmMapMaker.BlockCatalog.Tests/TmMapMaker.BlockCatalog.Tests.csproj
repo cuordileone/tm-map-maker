@@ -24,4 +24,8 @@
     <ProjectReference Include="..\..\src\TmMapMaker.BlockCatalog\TmMapMaker.BlockCatalog.csproj" />
   </ItemGroup>
 
+  <ItemGroup>
+    <None Include="TestData\**" CopyToOutputDirectory="PreserveNewest" />
+  </ItemGroup>
+
 </Project>
