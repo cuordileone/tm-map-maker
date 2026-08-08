@@ -13,5 +13,8 @@ public enum BlockFamily
     TrackWall,
     Water,
     Grass,
+    Open,
+    Stand,
+    Landscape,
     Unknown
 }

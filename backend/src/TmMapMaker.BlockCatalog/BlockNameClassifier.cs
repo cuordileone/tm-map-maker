@@ -13,9 +13,14 @@ public static class BlockNameClassifier
         ("Stage", BlockFamily.Stage),
         ("Water", BlockFamily.Water),
         ("Grass", BlockFamily.Grass),
+        ("Stand", BlockFamily.Stand),
+        ("Beach", BlockFamily.Landscape),
         ("Road", BlockFamily.Road),
         ("Gate", BlockFamily.Gate),
         ("Deco", BlockFamily.Deco),
+        ("Open", BlockFamily.Open),
+        ("Land", BlockFamily.Landscape),
+        ("Sea", BlockFamily.Landscape),
     };
 
     public static bool IsCustomBlock(string name) =>

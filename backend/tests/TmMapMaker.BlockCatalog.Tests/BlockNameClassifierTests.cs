@@ -15,6 +15,16 @@ public class BlockNameClassifierTests
     [InlineData("StageStructureStraight", BlockFamily.Stage)]
     [InlineData("TrackWall4mA", BlockFamily.TrackWall)]
     [InlineData("CanopyCenterFlatBase", BlockFamily.Canopy)]
+    [InlineData("OpenTechZoneStraight", BlockFamily.Open)]
+    [InlineData("OpenDirtRoadSlopeBase", BlockFamily.Open)]
+    [InlineData("OpenGrassHillsShortStraight", BlockFamily.Open)]
+    [InlineData("StandCornerOut", BlockFamily.Stand)]
+    [InlineData("StandStraight", BlockFamily.Stand)]
+    [InlineData("Land", BlockFamily.Landscape)]
+    [InlineData("LandHill", BlockFamily.Landscape)]
+    [InlineData("Sea_Land0_Land12", BlockFamily.Landscape)]
+    [InlineData("SeaCliff13", BlockFamily.Landscape)]
+    [InlineData("Beach", BlockFamily.Landscape)]
     public void ClassifyFamily_returns_expected_family_for_known_prefixes(string name, BlockFamily expected)
     {
         Assert.Equal(expected, BlockNameClassifier.ClassifyFamily(name));
